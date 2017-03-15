@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TinkoffProject</string>
+    <string name="messages">Сообщения</string>
+    <string name="test_message">Сообщение очень длинное, такое длинное, что даже и не влазит</string>
+    <string name="action_search">Поиск</string>
+    <string name="input_message">Введите текст сообщения</string>
 </resources>

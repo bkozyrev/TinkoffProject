@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorListBackgroundChat"
+        android:paddingBottom="56dp"
+        android:clipToPadding="false"
+        android:id="@+id/list"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical|right"
+        android:weightSum="14"
+        android:background="@color/colorChatEditTextBck"
+        android:id="@+id/container_text"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/btn_attach"
+            android:src="@drawable/ic_attach_file_black_24dp"
+            android:background="@android:color/transparent"
+            android:tint="@color/colorAttachIcon"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter" />
+
+        <EditText
+            android:id="@+id/et_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="13"
+            android:textColorHint="@color/colorMessageHint"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:background="@drawable/chat_edit_bck"
+            android:hint="@string/input_message"
+            android:padding="12dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/btn_send"
+            android:src="@drawable/ic_send_white_24dp"
+            android:background="@android:color/transparent"
+            android:tint="@color/colorAttachIcon"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter" />
+
+    </LinearLayout>
+
+</RelativeLayout>

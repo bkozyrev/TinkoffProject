@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorGrayText">#8a8a8a</color>
+    <color name="colorPrimaryWith50Alpha">#88FF4081</color>
+    <color name="colorListBackgroundChat">#eeeeee</color>
+    <color name="colorChatEditTextBck">#f7f7f7</color>
+    <color name="colorChatEditTextStroke">#dfdfdf</color>
+    <color name="colorAttachIcon">#b1b1b1</color>
+    <color name="colorMessageHint">#9e9e9e</color>
+    <color name="colorTime">#BCBCBC</color>
 </resources>
