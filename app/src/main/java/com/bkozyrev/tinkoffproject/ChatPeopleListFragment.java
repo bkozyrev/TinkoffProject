@@ -13,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +46,11 @@ public class ChatPeopleListFragment extends BaseFragment implements RecyclerView
     @Override
     public String getToolbarTitle() {
         return getString(R.string.messages);
+    }
+
+    @Override
+    protected void configureToolbar(Toolbar toolbar, boolean isDrawerFragment) {
+        super.configureToolbar(toolbar, true);
     }
 
     @Nullable

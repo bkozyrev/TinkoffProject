@@ -28,7 +28,7 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
         this.mItems = items;
     }
 
-    /*@Override
+    @Override
     public int getItemViewType(int position) {
         switch(position % 2) {
             case 0:
@@ -38,20 +38,20 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
             default:
                 return -1;
         }
-    }*/
+    }
 
     @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        /*switch(viewType) {
+        switch(viewType) {
             case TYPE_INCOME:
                 view = inflater.inflate(R.layout.item_list_chat_incoming_text, parent, false);
                 break;
             case TYPE_OUTCOME:
-                view = inflater.inflate(R.layout.item_chat_outcoming_text, parent, false);
+                view = inflater.inflate(R.layout.item_list_chat_outcoming_text, parent, false);
                 break;
-        }*/
-        view = inflater.inflate(R.layout.item_list_chat_incoming_text, parent, false);
+        }
+        //view = inflater.inflate(R.layout.item_list_chat_incoming_text, parent, false);
         return new ChatViewHolder(view);
     }
 
@@ -63,6 +63,11 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
     @Override
     public int getItemCount() {
         return mItems.size();
+    }
+
+    public void addMessage(MessageEntry messageEntry) {
+        mItems.add(0, messageEntry);
+        notifyItemInserted(0);
     }
 
     public class ChatViewHolder extends RecyclerView.ViewHolder {
@@ -79,7 +84,9 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
         }
 
         public void Bind(MessageEntry message) {
-            mTime.setText(message.getTime());
+            if (mTime != null) {
+                mTime.setText(message.getTime());
+            }
             mName.setText(message.getOwnerName());
             mMessage.setText(message.getText());
         }
