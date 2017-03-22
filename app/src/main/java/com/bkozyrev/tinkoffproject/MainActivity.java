@@ -2,9 +2,11 @@ package com.bkozyrev.tinkoffproject;
 
 import com.bkozyrev.tinkoffproject.Utils.DividerItemDecoration;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -122,6 +124,24 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null)
             mSelectedNavigationPosition = savedInstanceState.getInt(NAVIGATION_POSITION_KEY);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Fragment fragment = getFragmentManager().findFragmentByTag(ChatWithPersonFragment.class.getSimpleName());
+
+        if(resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case ChatWithPersonFragment.REQUEST_LOAD_IMAGE_MEDIA:
+                    if (fragment != null) {
+                        ((ChatWithPersonFragment) fragment).photoReady(intent.getData());
+                    }
+                    break;
+                case ChatWithPersonFragment.REQUEST_LOAD_VIDEO:
+                    break;
+            }
+        }
     }
 
     @Override

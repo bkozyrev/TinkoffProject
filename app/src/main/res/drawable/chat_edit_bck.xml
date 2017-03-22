@@ -4,7 +4,7 @@
 
     <solid android:color="@android:color/white" />
 
-    <stroke android:color="@color/colorChatEditTextStroke"
+    <stroke android:color="@color/colorLightGray"
         android:width="1px"/>
 
     <corners

@@ -2,9 +2,12 @@ package com.bkozyrev.tinkoffproject.Adapters;
 
 import com.bkozyrev.tinkoffproject.Model.MessageEntry;
 import com.bkozyrev.tinkoffproject.R;
+import com.squareup.picasso.Picasso;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +54,6 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
                 view = inflater.inflate(R.layout.item_list_chat_outcoming_text, parent, false);
                 break;
         }
-        //view = inflater.inflate(R.layout.item_list_chat_incoming_text, parent, false);
         return new ChatViewHolder(view);
     }
 
@@ -72,7 +74,7 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
 
     public class ChatViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mAvatar;
+        private ImageView mAvatar, mImageAttachment;
         private TextView mTime, mName, mMessage;
 
         public ChatViewHolder(View itemView) {
@@ -81,6 +83,7 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
             mTime = (TextView) itemView.findViewById(R.id.time);
             mName = (TextView) itemView.findViewById(R.id.name);
             mMessage = (TextView) itemView.findViewById(R.id.message);
+            mImageAttachment = (ImageView) itemView.findViewById(R.id.attachment_image);
         }
 
         public void Bind(MessageEntry message) {
@@ -88,7 +91,20 @@ public class ChatWithPersonAdapter extends RecyclerView.Adapter<ChatWithPersonAd
                 mTime.setText(message.getTime());
             }
             mName.setText(message.getOwnerName());
-            mMessage.setText(message.getText());
+
+            if (TextUtils.isEmpty(message.getText())) {
+                mMessage.setVisibility(View.GONE);
+            } else {
+                mMessage.setVisibility(View.VISIBLE);
+                mMessage.setText(message.getText());
+            }
+
+            if (message.getAttachmentImageUrl() != null) {
+                mImageAttachment.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load(Uri.parse(message.getAttachmentImageUrl())).into(mImageAttachment);
+            } else {
+                mImageAttachment.setVisibility(View.GONE);
+            }
         }
     }
 }

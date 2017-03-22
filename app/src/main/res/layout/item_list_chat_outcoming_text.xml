@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:id="@+id/text_container"
         android:background="@drawable/out_bubble"
         android:layout_marginLeft="72dp">
 
@@ -32,29 +33,31 @@
             android:textColor="@android:color/black"
             android:textSize="14sp"/>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/attachment_image"
+            android:adjustViewBounds="true"
+            android:layout_below="@+id/message"
+            android:visibility="gone"
+            android:maxHeight="228dp"
+            android:scaleType="centerInside"/>
+
     </RelativeLayout>
 
-        <!--<RelativeLayout
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_container">
+
+        <!--<ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/video_icon"
+            android:src="@drawable/ic_play_circle_outline_white_24dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>-->
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/attachment_image"
-                android:adjustViewBounds="true"
-                android:visibility="gone"
-                android:maxHeight="228dp"
-                android:scaleType="centerInside"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/video_icon"
-                android:src="@drawable/ic_play_circle_outline_white_24dp"
-                android:layout_centerInParent="true"
-                android:visibility="gone"/>
-
-        </RelativeLayout>-->
+    </RelativeLayout>
 
 </RelativeLayout>

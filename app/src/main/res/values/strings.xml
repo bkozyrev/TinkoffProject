@@ -8,4 +8,7 @@
     <string name="password">Пароль</string>
     <string name="sing_up_prompt">Нет аккаунта? Зарегистрируйтесь</string>
     <string name="sign_in_attempt">Попытка авторизации...</string>
+    <string name="upload_photo">Загрузить фото</string>
+    <string name="upload_video">Загрузить видео</string>
+    <string name="take_photo">Сделать фото</string>
 </resources>
