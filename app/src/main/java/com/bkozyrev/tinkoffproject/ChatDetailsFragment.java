@@ -11,11 +11,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +25,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by boriskozyrev on 15.03.17.
  */
 
-public class ChatWithPersonFragment extends BaseFragment implements View.OnClickListener {
+public class ChatDetailsFragment extends BaseFragment implements View.OnClickListener {
 
     public static final int REQUEST_LOAD_IMAGE_MEDIA = 16;
     public static final int REQUEST_LOAD_VIDEO = 17;
@@ -122,15 +127,15 @@ public class ChatWithPersonFragment extends BaseFragment implements View.OnClick
         uploadVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
                 startVideoPicker();
+                dialog.dismiss();
             }
         });
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startCameraIntent();
+                startCameraIntent();
                 dialog.dismiss();
             }
         });
@@ -149,13 +154,33 @@ public class ChatWithPersonFragment extends BaseFragment implements View.OnClick
         getActivity().startActivityForResult(galleryIntent, REQUEST_LOAD_VIDEO);
     }
 
+    private void startCameraIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            if (photoFile != null) {
+                mImageFromCameraPath = FileProvider.getUriForFile(mContext,
+                        "com.bkozyrev.tinkoffproject.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageFromCameraPath);
+                getActivity().startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
     public void photoReady() {
-        //sendPhotoMessage(mEtChat.getText().toString(), mImageFromCameraPath.toString());
+        sendMessage(mEtMessageText.getText().toString(), new Time(System.currentTimeMillis()).toString(),
+                mImageFromCameraPath.toString());
         clearEditText();
     }
 
     public void photoReady(Uri imageUri) {
-        sendPhotoMessage(mEtMessageText.getText().toString(), new Time(System.currentTimeMillis()).toString(),
+        sendMessage(mEtMessageText.getText().toString(), new Time(System.currentTimeMillis()).toString(),
                 imageUri.toString());
         clearEditText();
     }
@@ -166,12 +191,10 @@ public class ChatWithPersonFragment extends BaseFragment implements View.OnClick
     }
 
     private void sendMessage(String text, String time) {
-        mMessages.add(0, new MessageEntry(MessageType.TEXT, 0, text, null, time, null, "Me"));
-        mList.getAdapter().notifyItemInserted(0);
-        clearEditText();
+        sendMessage(text, time, null);
     }
 
-    private void sendPhotoMessage(String text, String time, String photoUri) {
+    private void sendMessage(String text, String time, String photoUri) {
         mMessages.add(0, new MessageEntry(MessageType.TEXT, 0, text, photoUri, time, null, "Me"));
         mList.getAdapter().notifyItemInserted(0);
         clearEditText();
@@ -184,5 +207,20 @@ public class ChatWithPersonFragment extends BaseFragment implements View.OnClick
     private void clearEditText() {
         mEtMessageText.setText(null);
         mList.scrollToPosition(0);
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        return image;
     }
 }

@@ -32,7 +32,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ChatPeopleListFragment extends BaseFragment implements RecyclerView.OnClickListener,
+public class ChatListFragment extends BaseFragment implements RecyclerView.OnClickListener,
         SearchView.OnQueryTextListener {
 
     private static final String CHAT_ENTRIES_KEY = "chat_entries_key";
@@ -198,6 +198,6 @@ public class ChatPeopleListFragment extends BaseFragment implements RecyclerView
 
     @Override
     public void onClick(View view) {
-        showFragment(R.id.container, new ChatWithPersonFragment(), true, ChatWithPersonFragment.class.getSimpleName());
+        showFragment(R.id.container, new ChatDetailsFragment(), true, ChatDetailsFragment.class.getSimpleName());
     }
 }

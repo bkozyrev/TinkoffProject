@@ -41,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
         navMenuView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST, false, true));
 
         setupNavigationDrawerContent(mNavigationView);
-        mSelectedNavigationPosition = -1;
-        mNavigationView.getMenu().getItem(0).setChecked(true);
-        setSelectedItem(0);
+        if (savedInstanceState == null) {
+            mSelectedNavigationPosition = -1;
+            mNavigationView.getMenu().getItem(0).setChecked(true);
+            setSelectedItem(0);
+        }
     }
 
     private void setupNavigationDrawerContent(NavigationView navigationView) {
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (position){
             case 0:
-                fragment = new ChatPeopleListFragment();
+                fragment = new ChatListFragment();
                 break;
         }
 
@@ -99,9 +101,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         FragmentManager fragmentManager = getFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.container);
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(fragmentManager.getBackStackEntryCount() == 1) {
+                if(fragment instanceof ChatListFragment) {
                     if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                         mDrawerLayout.openDrawer(GravityCompat.START);
                     }
@@ -129,16 +132,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        Fragment fragment = getFragmentManager().findFragmentByTag(ChatWithPersonFragment.class.getSimpleName());
+        Fragment fragment = getFragmentManager().findFragmentByTag(ChatDetailsFragment.class.getSimpleName());
 
         if(resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case ChatWithPersonFragment.REQUEST_LOAD_IMAGE_MEDIA:
+                case ChatDetailsFragment.REQUEST_LOAD_IMAGE_MEDIA:
                     if (fragment != null) {
-                        ((ChatWithPersonFragment) fragment).photoReady(intent.getData());
+                        ((ChatDetailsFragment) fragment).photoReady(intent.getData());
                     }
                     break;
-                case ChatWithPersonFragment.REQUEST_LOAD_VIDEO:
+                case ChatDetailsFragment.REQUEST_LOAD_VIDEO:
+                    break;
+                case ChatDetailsFragment.REQUEST_IMAGE_CAPTURE:
+                    if (fragment != null) {
+                        ((ChatDetailsFragment) fragment).photoReady();
+                    }
                     break;
             }
         }
