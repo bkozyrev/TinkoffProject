@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,10 +25,13 @@ import rx.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String KEY_LOGIN = "key_login";
+
     private Toolbar mToolbar;
     private AppCompatButton mLoginBtn;
     private Subscription mApiSubscription;
     private ProgressDialog mProgressDialog;
+    private EditText mLoginText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mLoginBtn = (AppCompatButton) findViewById(R.id.btn_login);
         mLoginBtn.setOnClickListener(this);
+        mLoginText = (EditText) findViewById(R.id.input_login);
     }
 
     @Override
@@ -94,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(KEY_LOGIN, mLoginText.getText().toString()); //TODO add check for empty input
         startActivity(intent);
     }
 }

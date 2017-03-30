@@ -7,15 +7,23 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeBounds;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,17 +33,24 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
+    private String mUserLogin;
     private int mSelectedNavigationPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCompat.postponeEnterTransition(this);
         setContentView(R.layout.activity_main);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(LoginActivity.KEY_LOGIN)) {
+            mUserLogin = intent.getStringExtra(LoginActivity.KEY_LOGIN);
+        }
 
         NavigationMenuView navMenuView = (NavigationMenuView) mNavigationView.getChildAt(0);
         navMenuView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST, false, true));
@@ -49,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupNavigationDrawerContent(NavigationView navigationView) {
+
+        FrameLayout drawerHeader = (FrameLayout) mNavigationView.getHeaderView(0).findViewById(R.id.drawer_header);
+        TextView userName = (TextView) drawerHeader.findViewById(R.id.drawer_name);
+        userName.setText(mUserLogin);
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -56,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.item_header_1:
                                 setSelectedItem(0);
+                                break;
+                            case R.id.item_header_2:
+                                setSelectedItem(1);
                                 break;
                         }
                         menuItem.setChecked(true);
@@ -72,9 +95,13 @@ public class MainActivity extends AppCompatActivity {
             case 0:
                 fragment = new ChatListFragment();
                 break;
+            case 1:
+                fragment = new AboutFragment();
+                break;
         }
 
         if (fragment != null && mSelectedNavigationPosition != position) {
+            setTransition(fragment  );
             mSelectedNavigationPosition = position;
             showFragment(R.id.container, fragment, true, fragment.getClass().getSimpleName(), null);
         } else {
@@ -83,14 +110,32 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
+    private void setTransition(Fragment fragment) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().getEnterTransition().setDuration(500);
+            Slide slideTransition = new Slide(Gravity.START);
+            slideTransition.setDuration(500);
+            fragment.setReenterTransition(slideTransition);
+            fragment.setExitTransition(slideTransition);
+            fragment.setSharedElementEnterTransition(new ChangeBounds());
+        }
+    }
+
     public void showFragment(int container, Fragment fragment, boolean addToBackStack, String name, Bundle arguments) {
         if (arguments != null)
             fragment.setArguments(arguments);
         FragmentManager fragmentManager = getFragmentManager();
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
                 .replace(container, fragment, name);
+
+        //Doesn't work :(
+        fragmentTransaction.setCustomAnimations(R.animator.slide_in, R.animator.slide_out,
+                R.animator.slide_in, R.animator.slide_out);
+
         if (addToBackStack)
             fragmentTransaction.addToBackStack(name == null || name.isEmpty() ? null : name);
+
         fragmentTransaction.commit();
     }
 
@@ -104,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(fragment instanceof ChatListFragment) {
+                if(fragment instanceof ChatListFragment ||
+                        fragment instanceof AboutFragment ) { //TODO rewrite using BaseDrawerFragment
                     if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                         mDrawerLayout.openDrawer(GravityCompat.START);
                     }

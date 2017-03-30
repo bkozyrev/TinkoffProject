@@ -3,10 +3,17 @@
 
     <group
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/item_header_1"
             android:icon="@drawable/ic_message_white_24dp"
             android:title="@string/messages" />
+
+        <item
+            android:id="@+id/item_header_2"
+            android:icon="@drawable/ic_message_white_24dp"
+            android:title="@string/about_app" />
+
     </group>
 
 </menu>
